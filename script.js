@@ -1,3 +1,94 @@
+// Intersection Observer for Scroll Animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+        }
+    });
+}, observerOptions);
+
+// Observe elements for animation
+document.addEventListener('DOMContentLoaded', () => {
+    const animateElements = document.querySelectorAll('.skill-card, .project-card, .highlight-card, .stat');
+    animateElements.forEach(el => {
+        observer.observe(el);
+    });
+});
+
+// Scroll to Top Functionality
+const scrollToTopBtn = document.getElementById('scrollToTop');
+
+// Show/hide scroll to top button based on scroll position
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+});
+
+// Scroll to top when button is clicked
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Loading Screen Functionality
+const loadingScreen = document.getElementById('loadingScreen');
+const body = document.body;
+
+// Add loading class to body
+body.classList.add('loading');
+
+// Hide loading screen when page is fully loaded
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        loadingScreen.classList.add('fade-out');
+        body.classList.remove('loading');
+        
+        // Remove loading screen from DOM after animation
+        setTimeout(() => {
+            loadingScreen.remove();
+        }, 500);
+    }, 1000); // Show loading for at least 1 second
+});
+
+// Theme Toggle Functionality
+const themeToggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+// Check for saved theme preference or default to 'dark'
+const currentTheme = localStorage.getItem('theme') || 'dark';
+html.setAttribute('data-theme', currentTheme);
+updateThemeIcon(currentTheme);
+
+// Theme toggle event listener
+themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+});
+
+// Function to update theme icon
+function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector('i');
+    if (theme === 'light') {
+        icon.className = 'fas fa-sun';
+    } else {
+        icon.className = 'fas fa-moon';
+    }
+}
+
 // Navigation functionality
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
